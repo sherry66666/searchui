@@ -13,6 +13,7 @@ import {
   MastheadNavTabs,
   SecondaryNavBar,
   SearchResultsCount,
+  ListSearchResult,
   SpellCheckMessage,
   SearchResultsFacetFilters,
   SearchResults,
@@ -26,6 +27,7 @@ import {
 } from '@attivio/suit';
 
 import SearchUIApp from '../SearchUIApp';
+import CityResult from '../components/CityResult';
 
 type SearchUISearchPageProps = {
   /**
@@ -45,20 +47,10 @@ type SearchUISearchPageProps = {
   relevancyModels: Array<string>;
 
   /**
-   * Whether or not the documents’ relevancy scores should be displayed.
-   * Defaults to false.
-   */
-  showScores: boolean;
-  /**
    * A map of the field names to the label to use for any entity fields.
    * Defaults to show the people, locations, and companies entities.
    */
   entityFields: Map<string, string>;
-  /**
-   * Whether or not to display a toggle for switching the search results
-   * to debug format.
-   */
-  debugViewToggle: boolean;
   /** The names of the fields to include in the sort menu. */
   sortableFields: Array<string>;
   /** The facet field names that should be displayed as pie charts */
@@ -109,7 +101,6 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
     relevancyModels: [],
     showScores: false,
     entityFields: new Map([['people', 'People'], ['locations', 'Locations'], ['companies', 'Companies']]),
-    debugViewToggle: false,
     sortableFields: [
       'title',
       'table',
@@ -165,8 +156,6 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
   }
 
   render() {
-    const showScores = this.props.showScores && this.props.searchEngineType === 'attivio';
-    const showTags = this.props.searchEngineType === 'attivio';
     return (
       <DocumentTitle title="Search: Attivio Cognitive Search">
         <div>
@@ -199,11 +188,9 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
                   <PlacementResults />
                   <SpellCheckMessage />
                   <SearchResults
-                    format={this.context.searcher.state.format}
+                    format={[CityResult.forDocument, ListSearchResult.forDocument]}
                     entityFields={this.props.entityFields}
                     baseUri={this.props.baseUri}
-                    showScores={showScores}
-                    showTags={showTags}
                   />
                 </Col>
               </Row>
