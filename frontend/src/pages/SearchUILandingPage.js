@@ -122,8 +122,7 @@ export default class SearchUILandingPage extends React.Component<void, {}, Searc
             <Row>
               <Col xs={12} sm={12} md={12} lg={12}>
                 <div style={{ textAlign: 'center', paddingTop: '20vh' }}>
-                  <div style={{ display: 'inline-block', width: '50%' }}>
-                    <img src="img/attivio-logo.png" alt="Attivio" />
+                  <div style={{ display: 'inline-block', width: '50%' }}>                  
                   </div>
                 </div>
               </Col>

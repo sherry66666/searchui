@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
+import $ from 'jquery';
 import PropTypes from 'prop-types';
-
 import DocumentTitle from 'react-document-title';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
@@ -140,9 +140,109 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
   };
 
   componentWillMount() {
+  // console("baseUri1:"+${config.baseUri})
     this.context.searcher.doSearch();
   }
-
+ handleClick = () => {	
+    	var attivioProtocol = this.context.app.state.config.ALL.attivioProtocol;
+	    var attivioHostname = this.context.app.state.config.ALL.attivioHostname;
+	    var attivioPort = this.context.app.state.config.ALL.attivioPort;
+		var fieldValue = this.context.app.state.config.ALL.fieldValue;
+		var query = {
+		"query": "",
+		"workflow": "search",
+		"queryLanguage": "simple",
+		"locale": "en",
+		"rows": 5000,
+		"filters": [],
+		"facets": [],
+		"sort": [
+		  ".score:DESC"
+		],
+		"fields": [
+		 fieldValue
+		],
+		"facetFilters": [],
+		"restParams": {
+			"offset": [
+			  "0"
+			],
+			"relevancymodelnames": [
+			  "default"
+			],
+			"includemetadatainresponse": [
+			  "true"
+			],
+			"highlight": [
+			  "false"
+			],
+			"highlight.mode": [
+			  "HTML"
+			],
+			"facet.ff": [
+			  "RESULTS"
+			],
+			"facet.ffcount": [
+			  "20"
+			],
+			"join.rollup": [
+			  "tree"
+			],
+			"abc.enabled": [
+			  "true"
+			],
+			"searchProfile": [
+			  "Attivio"
+			]
+		},
+		"realm": "aie"
+	};
+	 query.query = this.context.searcher.state.query;
+	 if (this.context.searcher.state.geoFilters) {
+      query.filters = this.context.searcher.state.geoFilters;
+    } else {
+      query.filters = [];
+    }
+    if (this.props.queryFilter) {
+      query.filters.push(this.context.searcher.props.queryFilter);
+    }
+	var url = attivioProtocol+"://"+attivioHostname+":"+attivioPort+"/rest/searchApi/search";
+	console.log(attivioProtocol+"://"+attivioHostname+":"+attivioPort+"/rest/searchApi/search");
+    query.facetFilters = this.context.searcher.state.facetFilters;
+		$.ajax({
+			url: url,			
+			method: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(query),
+			success: function (result) {			 
+				var resultArray = [];
+				resultArray.push(query.query);
+				$.each(result.documents, function (index, value) {
+					var title = value.fields ? value.fields[fieldValue]: "";								
+					resultArray.push(title.toString().replace(",", "，").replace(";", "；"));
+				});
+				var result = resultArray.join(",");
+				console.log("result:"+result);
+				for (var i = 8000; i < 8500; i ++)
+				{
+					try 
+					{
+						parent.postMessage(result, "http://localhost:" + i + "/");
+					}
+					catch (e)
+					{
+					}
+				}
+			},
+            error:function (e) {
+　　　　　　　　　　//返回500错误 或者其他 http状态码错误时 需要在error 回调函数中处理了 并且返回的数据还不能直接alert，需要使用
+　　　　　　　　　　//$.parseJSON 进行转译    res.msg 是自己组装的错误信息通用变量  
+                //var res = $.parseJSON(e.responseText);
+                //layer.msg(res.msg);
+				console.log("e.responseText:"+e.responseText);
+            }
+		});
+  }
   renderSecondaryNavBar() {
     return (
       <SecondaryNavBar>
@@ -171,8 +271,14 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
       <DocumentTitle title="Search: Attivio Cognitive Search">
         <div>
           <Masthead multiline homeRoute="/landing">
-            <MastheadNavTabs initialTab="/results" tabInfo={this.context.app.getMastheadNavTabs()} />
-            <SearchBar
+            <MastheadNavTabs initialTab="/results" tabInfo={this.context.app.getMastheadNavTabs()} />           
+			<div className="attivio-tabpanel-radio attivio-tabpanel-radio-navbar attivio-globalmast-tabpanel">
+			<ul className="nav nav-tabs"><li className="active">
+				<a role="button" tabindex="0" onClick={this.handleClick}>Export</a>			
+			</li>
+		    </ul>
+			</div>
+			<SearchBar
               inMasthead
             />
           </Masthead>

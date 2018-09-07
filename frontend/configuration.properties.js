@@ -13,7 +13,7 @@
     //   - SearchUISearchPage.sortableFields
 
     searchEngineType: 'attivio',
-
+    sarchuiURL:'http://localhost:17000/rest/searchApi/search',
     // This is the base URI that will be used for making REST API calls to the
     // Attivo server. In general, the UI is hosted on the same machine that
     // serves the REST API, so this should not include the protocol, hostname, or port.
