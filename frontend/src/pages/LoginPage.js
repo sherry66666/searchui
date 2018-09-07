@@ -64,7 +64,7 @@ export default class LoginPage extends React.Component<void, any, LoginPageState
               <Col xs={12} sm={12} md={8} lg={6} mdOffset={2} lgOffset={3}>
                 <div style={{ display: 'inline-block', width: '50%', paddingBottom: '20px' }}>
                   <h3>Log In</h3>
-                  Enter your log-in credentials to search the Attivio index:
+                  Enter your log-in credentials to search the index:
                 </div>
                 <LoginForm
                   doLogin={this.doLogin}
