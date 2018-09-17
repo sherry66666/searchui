@@ -148,6 +148,7 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 	    var attivioHostname = this.context.app.state.config.ALL.attivioHostname;
 	    var attivioPort = this.context.app.state.config.ALL.attivioPort;
 		var fieldValue = this.context.app.state.config.ALL.fieldValue;
+		var webplayerURL = this.context.app.state.config.ALL.webplayerURL;
 		var query = {
 		"query": "",
 		"workflow": "search",
@@ -223,22 +224,23 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 				});
 				var result = resultArray.join(",");
 				console.log("result:"+result);
-				for (var i = 8000; i < 8500; i ++)
-				{
-					try 
+				if (webplayerURL.replace(/(^\s*)|(\s*$)/g, "").length ==0) { 
+					for (var i = 8000; i < 8500; i ++)
 					{
+						try 
+						{
 						parent.postMessage(result, "http://localhost:" + i + "/");
+						}
+						catch (e)
+						{
+						}
 					}
-					catch (e)
-					{
-					}
+				}else{
+					parent.postMessage(result, webplayerURL);
 				}
 			},
             error:function (e) {
-　　　　　　　　　　//返回500错误 或者其他 http状态码错误时 需要在error 回调函数中处理了 并且返回的数据还不能直接alert，需要使用
-　　　　　　　　　　//$.parseJSON 进行转译    res.msg 是自己组装的错误信息通用变量  
-                //var res = $.parseJSON(e.responseText);
-                //layer.msg(res.msg);
+　　　　　　　　　　//返回500错误 或者其他 http状态码错误时 需要在error 回调函数中处理了
 				console.log("e.responseText:"+e.responseText);
             }
 		});
