@@ -138,11 +138,12 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
     searcher: PropTypes.any,
     app: PropTypes.shape({ type: PropTypes.oneOf([SearchUIApp]) }),
   };
-
+  
   componentWillMount() {
   // console("baseUri1:"+${config.baseUri})
     this.context.searcher.doSearch();
   }
+  
  handleClick = () => {	
     	var attivioProtocol = this.context.app.state.config.ALL.attivioProtocol;
 	    var attivioHostname = this.context.app.state.config.ALL.attivioHostname;
@@ -224,19 +225,30 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 				});
 				var result = resultArray.join(",");
 				console.log("result:"+result);
-				if (webplayerURL.replace(/(^\s*)|(\s*$)/g, "").length ==0) { 
+				
+				var isWebPlayer = false;
+				
+				try
+				{
+					parent.postMessage(result, webplayerUrl);
+					isWebPlayer = true
+				}
+				catch (e)
+				{
+				}
+				
+				if (!isWebPlayer) { 
 					for (var i = 8000; i < 8500; i ++)
 					{
 						try 
 						{
-						parent.postMessage(result, "http://localhost:" + i + "/");
+							parent.postMessage(result, "http://localhost:" + i + "/");
+							break;
 						}
 						catch (e)
 						{
 						}
 					}
-				}else{
-					parent.postMessage(result, webplayerURL);
 				}
 			},
             error:function (e) {
