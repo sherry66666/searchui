@@ -228,7 +228,7 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 				
 				try
 				{
-					parent.postMessage(result, webplayerUrl);
+					parent.postMessage(result, webplayerURL);
 				}
 				catch (e)
 				{
@@ -239,7 +239,6 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 					try 
 					{
 						parent.postMessage(result, "http://localhost:" + i + "/");
-						break;
 					}
 					catch (e)
 					{
