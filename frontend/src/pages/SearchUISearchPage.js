@@ -149,13 +149,14 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 	    var attivioHostname = this.context.app.state.config.ALL.attivioHostname;
 	    var attivioPort = this.context.app.state.config.ALL.attivioPort;
 		var fieldValue = this.context.app.state.config.ALL.fieldValue;
+		var rows = this.context.app.state.config.ALL.rows;
 		var webplayerURL = this.context.app.state.config.ALL.webplayerURL;
 		var query = {
 		"query": "",
 		"workflow": "search",
 		"queryLanguage": "simple",
 		"locale": "en",
-		"rows": 5000,
+		"rows": rows,
 		"filters": [],
 		"facets": [],
 		"sort": [
