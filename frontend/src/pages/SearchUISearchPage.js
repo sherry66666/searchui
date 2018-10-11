@@ -227,28 +227,22 @@ class SearchUISearchPage extends React.Component<SearchUISearchPageProps, Search
 				var result = resultArray.join(",");
 				console.log("result:"+result);
 				
-				var isWebPlayer = false;
-				
 				try
 				{
-					parent.postMessage(result, webplayerUrl);
-					isWebPlayer = true
+					parent.postMessage(result, webplayerURL);
 				}
 				catch (e)
 				{
 				}
 				
-				if (!isWebPlayer) { 
-					for (var i = 8000; i < 8500; i ++)
+				for (var i = 8000; i < 8500; i ++)
+				{
+					try 
 					{
-						try 
-						{
-							parent.postMessage(result, "http://localhost:" + i + "/");
-							break;
-						}
-						catch (e)
-						{
-						}
+						parent.postMessage(result, "http://localhost:" + i + "/");
+					}
+					catch (e)
+					{
 					}
 				}
 			},
